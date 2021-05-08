@@ -108,7 +108,7 @@ function processElementNode(node, state, preserveSpace) {
         if (!nodePreserveSpace && state.options.collapseContent) {
 
             const containsTextNodes = node.children.some(function(child) {
-                return child.type === 'Text' && child.content.trim() !== '';
+                return (child.type === 'Text' && child.content.trim() !== '') || (child.type === 'CDATA');
             });
 
             if (containsTextNodes) {
