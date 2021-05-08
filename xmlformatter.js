@@ -197,7 +197,7 @@ function processProcessingIntruction(node, state) {
     }
     appendContent(state, '<?' + node.name);
     processAttributes(state, node.attributes);
-    appendContent(state, '?>');
+    appendContent(state, ' ?>\n');
 }
 
 
@@ -223,7 +223,7 @@ function format(xml, options = {}) {
     }
 
     parsedXml.children.forEach(function(child) {
-        processNode(child, state, false);
+        processNode(child, state, true);
     });
 
     return state.content;
