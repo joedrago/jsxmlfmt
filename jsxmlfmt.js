@@ -1,5 +1,5 @@
 var fs = require('fs');
-var xmlFormatter = require('xml-formatter');
+var xmlFormatter = require('./xmlformatter.js');
 
 function main() {
     var argv = process.argv.slice(2);
@@ -10,7 +10,18 @@ function main() {
 
     for(arg of argv) {
         var rawXML = fs.readFileSync(arg, "utf8");
-        var outputXML = xmlFormatter(rawXML);
+        var outputXML = xmlFormatter(rawXML, {
+            // indentation: '',
+            // collapseContent: true
+            sorting: [
+                {
+                    parentTag: 'DECLARE',
+                    childTag: 'PhysicalForeignKey',
+                    sortAttribute: 'name',
+                    reverse: false
+                }
+            ]
+        });
         fs.writeFileSync(arg + ".out.xml", outputXML);
     }
 }

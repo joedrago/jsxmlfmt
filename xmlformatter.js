@@ -1,3 +1,7 @@
+// This file began life as https://raw.githubusercontent.com/chrisbottin/xml-formatter/master/index.js
+//
+// It is now full of hacks.
+
 /**
  * @typedef {Object} XMLFormatterOptions
  *  @property {String} [indentation='    '] The value used for indentation
@@ -110,6 +114,51 @@ function processElementNode(node, state, preserveSpace) {
             if (containsTextNodes) {
                 nodePreserveSpace = true;
             }
+        }
+
+        if(state.options.sorting && (state.options.sorting.length > 0)) {
+            state.options.sorting.forEach(function(rule) {
+                if(node.name == rule.parentTag) {
+                    var indicesToSort = [];
+                    var childByOrigIndex = {};
+                    for(var i = 0; i < node.children.length; ++i) {
+                        var child = node.children[i];
+                        if(child.name == rule.childTag) {
+                            indicesToSort.push(i);
+                            childByOrigIndex[i] = child;
+                        }
+                    }
+
+                    if(indicesToSort.length > 0) {
+                        var reverseCoeff = rule.reverse ? -1 : 1;
+                        var sortAttribute = rule.sortAttribute;
+                        var sortedIndices = indicesToSort.slice(0); // clone
+                        sortedIndices.sort(function(a, b) {
+                            var childA = node.children[a];
+                            var childB = node.children[b];
+                            if(childA.attributes.hasOwnProperty(sortAttribute) && childA.attributes.hasOwnProperty(sortAttribute)) {
+                                var propA = childA.attributes[sortAttribute];
+                                var propB = childB.attributes[sortAttribute];
+                                if(propA < propB) {
+                                    return -1 * reverseCoeff;
+                                }
+                                if(propA > propB) {
+                                    return 1 * reverseCoeff;
+                                }
+                            } else if(childA.attributes.hasOwnProperty(sortAttribute)) {
+                                return 1 * reverseCoeff;
+                            } else if(childB.attributes.hasOwnProperty(sortAttribute)) {
+                                return -1 * reverseCoeff;
+                            }
+                            return 0;
+                        });
+
+                        for(var i = 0; i < indicesToSort.length; ++i) {
+                            node.children[indicesToSort[i]] = childByOrigIndex[sortedIndices[i]];
+                        }
+                    }
+                }
+            });
         }
 
         node.children.forEach(function(child) {
