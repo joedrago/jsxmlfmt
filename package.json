@@ -1,0 +1,8 @@
+{
+  "name": "jsxmlfmt",
+  "version": "0.0.1",
+  "main": "jsxmlfmt.js",
+  "dependencies": {
+    "xml-formatter": "^2.4.0"
+  }
+}
