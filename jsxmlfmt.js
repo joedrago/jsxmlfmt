@@ -11,9 +11,9 @@ function main() {
     for(arg of argv) {
         var rawXML = fs.readFileSync(arg, "utf8");
         var outputXML = xmlFormatter(rawXML, {
-            // indentation: '',
-            // collapseContent: true
-            sorting: [
+            indentation: '',
+            collapseContent: true,
+            sortRules: [
                 {
                     parentTag: 'DECLARE',
                     childTag: 'PhysicalForeignKey',

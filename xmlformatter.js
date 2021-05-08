@@ -116,8 +116,8 @@ function processElementNode(node, state, preserveSpace) {
             }
         }
 
-        if(state.options.sorting && (state.options.sorting.length > 0)) {
-            state.options.sorting.forEach(function(rule) {
+        if(state.options.sortRules && (state.options.sortRules.length > 0)) {
+            state.options.sortRules.forEach(function(rule) {
                 if(node.name == rule.parentTag) {
                     var indicesToSort = [];
                     var childByOrigIndex = {};
